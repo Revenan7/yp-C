@@ -12,7 +12,11 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <!-- Header -->
+            <RowDefinition Height="Auto"/>
+            <!-- Навигация -->
             <RowDefinition Height="*"/>
+            <!-- Frame -->
         </Grid.RowDefinitions>
 
         <!-- Header с информацией о пользователе -->
@@ -28,50 +32,39 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Кнопка "Назад" -->
                 <Button Grid.Column="0" 
                         x:Name="BackButton"
                         Content="← Назад" 
-                        Style="{StaticResource PrimaryButtonStyle}"
                         Padding="10,5"
                         Margin="0,0,10,0"
                         Click="BackButton_Click"
                         Visibility="Collapsed"/>
 
-                <!-- Блок с информацией о пользователе (виден только после авторизации) -->
                 <StackPanel Grid.Column="2" 
                            Orientation="Horizontal" 
                            x:Name="UserInfoPanel"
                            Visibility="Collapsed">
-                    <TextBlock Text="Роль:" 
-                              Margin="0,0,5,0"
-                              VerticalAlignment="Center"/>
-                    <TextBlock x:Name="RoleTextBlock" 
-                              FontWeight="Bold"
-                              Margin="0,0,15,0"
-                              VerticalAlignment="Center"/>
-                    <TextBlock Text="Пользователь:" 
-                              Margin="0,0,5,0"
-                              VerticalAlignment="Center"/>
-                    <TextBlock x:Name="UsernameTextBlock" 
-                              FontWeight="Bold"
-                              Margin="0,0,15,0"
-                              VerticalAlignment="Center"/>
-
-                    <!-- Кнопка "Выйти" -->
-                    <Button x:Name="LogoutButton"
-                            Content="Выйти"
-                            Style="{StaticResource PrimaryButtonStyle}"
-                            Padding="10,5"
-                            Click="LogoutButton_Click"/>
+                    <TextBlock Text="Роль:" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="RoleTextBlock" FontWeight="Bold" Margin="0,0,15,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="Пользователь:" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="UsernameTextBlock" FontWeight="Bold" Margin="0,0,15,0" VerticalAlignment="Center"/>
+                    <Button x:Name="LogoutButton" Content="Выйти" Padding="10,5" Click="LogoutButton_Click"/>
                 </StackPanel>
             </Grid>
         </Border>
 
-        <!-- Основной контент - Frame для страниц -->
-        <Frame Grid.Row="1" 
-               x:Name="MainFrame" 
-               NavigationUIVisibility="Hidden"
-               Navigated="MainFrame_Navigated"/>
+        <!-- Навигационная панель -->
+        <Border Grid.Row="1" Background="#FFEFEFEF" BorderBrush="LightGray" BorderThickness="0,0,0,1" Margin="0,0,0,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Button Content="Products" Margin="5" Padding="10,5" Click="ProductsButton_Click"/>
+                <Button Content="Edit Product" Margin="5" Padding="10,5" Click="EditProductButton_Click"/>
+                <Button Content="Orders" Margin="5" Padding="10,5" Click="OrdersButton_Click"/>
+                <Button Content="Edit Order" Margin="5" Padding="10,5" Click="EditOrderButton_Click"/>
+                <Button Content="Select Products" Margin="5" Padding="10,5" Click="SelectProductsButton_Click"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Основной Frame -->
+        <Frame Grid.Row="2" x:Name="MainFrame" NavigationUIVisibility="Hidden" Navigated="MainFrame_Navigated"/>
     </Grid>
 </Window>

@@ -82,8 +82,8 @@ namespace ShoesShop.Pages
             if (_mainWindow.CurrentUser != null)
             {
                 var role = _mainWindow.CurrentUser.Роли?.Роль;
-                _isAdmin = role == "Администратор";
-                _isManager = role == "Менеджер";
+                _isAdmin = true;
+                _isManager = role == "????????????";
 
                 // Показываем кнопку добавления только для администратора
                 AddOrderButton.Visibility = _isAdmin ? Visibility.Visible : Visibility.Collapsed;

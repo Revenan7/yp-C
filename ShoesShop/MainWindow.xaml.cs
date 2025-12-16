@@ -15,6 +15,8 @@ namespace ShoesShop
             ShowAuthPage();
         }
 
+        #region Авторизация
+
         public void ShowAuthPage()
         {
             MainFrame.Navigate(new AuthPage(this));
@@ -29,7 +31,6 @@ namespace ShoesShop
             UpdateUserInfo();
             NavigateToMainPage();
 
-            // Информационное сообщение об успешной авторизации
             MessageBox.Show($"Успешная авторизация! Добро пожаловать, {user.ФИО}!",
                           "Успех",
                           MessageBoxButton.OK,
@@ -42,7 +43,6 @@ namespace ShoesShop
             HideUserInfo();
             NavigateToMainPage();
 
-            // Информационное сообщение для гостя
             MessageBox.Show("Вы вошли как гость. Доступен просмотр товаров.",
                           "Гостевой вход",
                           MessageBoxButton.OK,
@@ -54,8 +54,6 @@ namespace ShoesShop
             if (CurrentUser != null)
             {
                 UserInfoPanel.Visibility = Visibility.Visible;
-
-                // Используем ФИО вместо логина
                 UsernameTextBlock.Text = CurrentUser.ФИО;
                 RoleTextBlock.Text = CurrentUser.Роли?.Роль ?? "Неизвестно";
             }
@@ -71,6 +69,10 @@ namespace ShoesShop
             UsernameTextBlock.Text = string.Empty;
             RoleTextBlock.Text = string.Empty;
         }
+
+        #endregion
+
+        #region Навигация
 
         private void NavigateToMainPage()
         {
@@ -94,15 +96,45 @@ namespace ShoesShop
 
         private void UpdateBackButton()
         {
-            // Показываем кнопку "Назад" только если есть куда возвращаться
-            // и мы не на странице авторизации
             BackButton.Visibility = MainFrame.CanGoBack &&
-                                  !(MainFrame.Content is AuthPage)
-                                  ? Visibility.Visible
-                                  : Visibility.Collapsed;
+                                    !(MainFrame.Content is AuthPage)
+                                    ? Visibility.Visible
+                                    : Visibility.Collapsed;
         }
 
-        // Обработчик кнопки "Выйти"
+        #endregion
+
+        #region Навигация по кнопкам
+
+        private void ProductsButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new ProductsPage(this));
+        }
+
+        private void EditProductButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new EditProductPage(this));
+        }
+
+        private void OrdersButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new OrdersPage(this));
+        }
+
+        private void EditOrderButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new EditOrderPage(this));
+        }
+
+        private void SelectProductsButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new SelectProductsWindow(this));
+        }
+
+        #endregion
+
+        #region Выход
+
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             var result = MessageBox.Show("Вы уверены, что хотите выйти?",
@@ -123,16 +155,20 @@ namespace ShoesShop
             }
         }
 
-        // Метод для показа информационных сообщений из других страниц
+        #endregion
+
+        #region Сообщения
+
         public void ShowMessage(string message, string title = "Информация", MessageBoxImage icon = MessageBoxImage.Information)
         {
             MessageBox.Show(message, title, MessageBoxButton.OK, icon);
         }
 
-        // Метод для показа сообщений об ошибках
         public void ShowError(string message, string title = "Ошибка")
         {
             MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
+        #endregion
     }
 }
