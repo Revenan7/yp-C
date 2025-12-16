@@ -84,7 +84,6 @@ namespace ShoesShop.Pages
                     // Загрузка пользователей (только авторизированных клиентов)
                     UserComboBox.ItemsSource = context.Пользователи
                         .Include(u => u.Роли)
-                        .Where(u => u.Роли.Роль == "Авторизированный клиент")
                         .ToList();
 
                     // Загрузка статусов

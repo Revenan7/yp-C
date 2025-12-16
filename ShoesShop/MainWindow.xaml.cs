@@ -1,27 +1,35 @@
 ﻿using ShoesShop.Pages;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Navigation;
 
 namespace ShoesShop
 {
     public partial class MainWindow : Window
     {
+        public enum UserRole
+        {
+            Admin = 1,
+            Manager = 2,
+            Client = 3
+        }
+
         public Пользователи CurrentUser { get; private set; }
 
         public MainWindow()
         {
             InitializeComponent();
+            UpdateRoleAccess();
             ShowAuthPage();
         }
 
-        #region Авторизация
+        // ================== AUTH ==================
 
         public void ShowAuthPage()
         {
             MainFrame.Navigate(new AuthPage(this));
-            HideUserInfo();
             CurrentUser = null;
+            HideUserInfo();
+            UpdateRoleAccess();
             UpdateBackButton();
         }
 
@@ -29,38 +37,23 @@ namespace ShoesShop
         {
             CurrentUser = user;
             UpdateUserInfo();
-            NavigateToMainPage();
-
-            MessageBox.Show($"Успешная авторизация! Добро пожаловать, {user.ФИО}!",
-                          "Успех",
-                          MessageBoxButton.OK,
-                          MessageBoxImage.Information);
+            UpdateRoleAccess();
+            MainFrame.Navigate(new ProductsPage(this));
         }
 
         public void LoginAsGuest()
         {
             CurrentUser = null;
             HideUserInfo();
-            NavigateToMainPage();
-
-            MessageBox.Show("Вы вошли как гость. Доступен просмотр товаров.",
-                          "Гостевой вход",
-                          MessageBoxButton.OK,
-                          MessageBoxImage.Information);
+            UpdateRoleAccess();
+            MainFrame.Navigate(new ProductsPage(this));
         }
 
         private void UpdateUserInfo()
         {
-            if (CurrentUser != null)
-            {
-                UserInfoPanel.Visibility = Visibility.Visible;
-                UsernameTextBlock.Text = CurrentUser.ФИО;
-                RoleTextBlock.Text = CurrentUser.Роли?.Роль ?? "Неизвестно";
-            }
-            else
-            {
-                HideUserInfo();
-            }
+            UserInfoPanel.Visibility = Visibility.Visible;
+            UsernameTextBlock.Text = CurrentUser.ФИО;
+            RoleTextBlock.Text = CurrentUser.Роли?.Роль ?? "Неизвестно";
         }
 
         private void HideUserInfo()
@@ -70,23 +63,79 @@ namespace ShoesShop
             RoleTextBlock.Text = string.Empty;
         }
 
-        #endregion
+        // ================== ROLES ==================
 
-        #region Навигация
-
-        private void NavigateToMainPage()
+        private void UpdateRoleAccess()
         {
-            MainFrame.Navigate(new ProductsPage(this));
-            UpdateBackButton();
+            HideAllButtons();
+
+            // гость
+            if (CurrentUser == null)
+            {
+                ProductsButton.Visibility = Visibility.Visible;
+                return;
+            }
+
+            switch ((UserRole)CurrentUser.ID_роли)
+            {
+                case UserRole.Admin:
+                    ShowAllButtons();
+                    break;
+
+                case UserRole.Manager:
+                    ProductsButton.Visibility = Visibility.Visible;
+                    EditProductButton.Visibility = Visibility.Visible;
+                    OrdersButton.Visibility = Visibility.Visible;
+                    EditOrderButton.Visibility = Visibility.Visible;
+                    break;
+
+                case UserRole.Client:
+                    ProductsButton.Visibility = Visibility.Visible;
+                    OrdersButton.Visibility = Visibility.Visible;
+                    SelectProductsButton.Visibility = Visibility.Visible;
+                    break;
+            }
         }
+
+        private void HideAllButtons()
+        {
+            ProductsButton.Visibility = Visibility.Collapsed;
+            EditProductButton.Visibility = Visibility.Collapsed;
+            OrdersButton.Visibility = Visibility.Collapsed;
+            EditOrderButton.Visibility = Visibility.Collapsed;
+            SelectProductsButton.Visibility = Visibility.Collapsed;
+        }
+
+        private void ShowAllButtons()
+        {
+            ProductsButton.Visibility = Visibility.Visible;
+            EditProductButton.Visibility = Visibility.Visible;
+            OrdersButton.Visibility = Visibility.Visible;
+            EditOrderButton.Visibility = Visibility.Visible;
+            SelectProductsButton.Visibility = Visibility.Visible;
+        }
+
+        // ================== NAVIGATION ==================
+
+        private void ProductsButton_Click(object sender, RoutedEventArgs e)
+            => MainFrame.Navigate(new ProductsPage(this));
+
+        private void EditProductButton_Click(object sender, RoutedEventArgs e)
+            => MainFrame.Navigate(new EditProductPage(this));
+
+        private void OrdersButton_Click(object sender, RoutedEventArgs e)
+            => MainFrame.Navigate(new OrdersPage(this));
+
+        private void EditOrderButton_Click(object sender, RoutedEventArgs e)
+            => MainFrame.Navigate(new EditOrderPage(this));
+
+        private void SelectProductsButton_Click(object sender, RoutedEventArgs e)
+            => MainFrame.Navigate(new SelectProductsWindow(this));
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             if (MainFrame.CanGoBack)
-            {
                 MainFrame.GoBack();
-                UpdateBackButton();
-            }
         }
 
         private void MainFrame_Navigated(object sender, NavigationEventArgs e)
@@ -96,79 +145,35 @@ namespace ShoesShop
 
         private void UpdateBackButton()
         {
-            BackButton.Visibility = MainFrame.CanGoBack &&
-                                    !(MainFrame.Content is AuthPage)
-                                    ? Visibility.Visible
-                                    : Visibility.Collapsed;
+            BackButton.Visibility =
+                MainFrame.CanGoBack && !(MainFrame.Content is AuthPage)
+                ? Visibility.Visible
+                : Visibility.Collapsed;
         }
 
-        #endregion
-
-        #region Навигация по кнопкам
-
-        private void ProductsButton_Click(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(new ProductsPage(this));
-        }
-
-        private void EditProductButton_Click(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(new EditProductPage(this));
-        }
-
-        private void OrdersButton_Click(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(new OrdersPage(this));
-        }
-
-        private void EditOrderButton_Click(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(new EditOrderPage(this));
-        }
-
-        private void SelectProductsButton_Click(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(new SelectProductsWindow(this));
-        }
-
-        #endregion
-
-        #region Выход
+        // ================== LOGOUT ==================
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show("Вы уверены, что хотите выйти?",
-                                        "Выход из системы",
-                                        MessageBoxButton.YesNo,
-                                        MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
+            if (MessageBox.Show("Вы уверены, что хотите выйти?",
+                                "Выход",
+                                MessageBoxButton.YesNo,
+                                MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                CurrentUser = null;
-                HideUserInfo();
                 ShowAuthPage();
-
-                MessageBox.Show("Вы успешно вышли из системы.",
-                              "Выход",
-                              MessageBoxButton.OK,
-                              MessageBoxImage.Information);
             }
         }
 
-        #endregion
-
-        #region Сообщения
-
-        public void ShowMessage(string message, string title = "Информация", MessageBoxImage icon = MessageBoxImage.Information)
-        {
-            MessageBox.Show(message, title, MessageBoxButton.OK, icon);
-        }
+        // ================== MESSAGES ==================
 
         public void ShowError(string message, string title = "Ошибка")
         {
             MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        #endregion
+        public void ShowMessage(string message, string title = "Информация")
+        {
+            MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Information);
+        }
     }
 }
