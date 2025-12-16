@@ -92,7 +92,8 @@ namespace ShoesShop
                 case UserRole.Client:
                     ProductsButton.Visibility = Visibility.Visible;
                     OrdersButton.Visibility = Visibility.Visible;
-                    SelectProductsButton.Visibility = Visibility.Visible;
+
+
                     break;
             }
         }
@@ -103,7 +104,7 @@ namespace ShoesShop
             EditProductButton.Visibility = Visibility.Collapsed;
             OrdersButton.Visibility = Visibility.Collapsed;
             EditOrderButton.Visibility = Visibility.Collapsed;
-            SelectProductsButton.Visibility = Visibility.Collapsed;
+
         }
 
         private void ShowAllButtons()
@@ -112,7 +113,7 @@ namespace ShoesShop
             EditProductButton.Visibility = Visibility.Visible;
             OrdersButton.Visibility = Visibility.Visible;
             EditOrderButton.Visibility = Visibility.Visible;
-            SelectProductsButton.Visibility = Visibility.Visible;
+
         }
 
         // ================== NAVIGATION ==================
@@ -129,8 +130,7 @@ namespace ShoesShop
         private void EditOrderButton_Click(object sender, RoutedEventArgs e)
             => MainFrame.Navigate(new EditOrderPage(this));
 
-        private void SelectProductsButton_Click(object sender, RoutedEventArgs e)
-            => MainFrame.Navigate(new SelectProductsWindow(this));
+
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {

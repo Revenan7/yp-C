@@ -3,9 +3,9 @@
 
     <!-- Цвета из руководства по стилю -->
     <Color x:Key="PrimaryBackgroundColor">#FFFFFFFF</Color>
-    <Color x:Key="SecondaryBackgroundColor">#FF7FFF00</Color>
-    <Color x:Key="AccentColor">#FF00FA9A</Color>
-    <Color x:Key="DiscountBackgroundColor">#FF2E8B57</Color>
+    <Color x:Key="SecondaryBackgroundColor">lightblue</Color>
+    <Color x:Key="AccentColor">lightblue</Color>
+    <Color x:Key="DiscountBackgroundColor">blue</Color>
 
     <!-- Кисти на основе цветов -->
     <SolidColorBrush x:Key="PrimaryBackgroundBrush" Color="{StaticResource PrimaryBackgroundColor}"/>
@@ -50,7 +50,7 @@
                 <Setter Property="Background" Value="{StaticResource SecondaryBackgroundBrush}"/>
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" Value="#FF00CD66"/>
+                <Setter Property="Background" Value="Blue"/>
             </Trigger>
         </Style.Triggers>
     </Style>
