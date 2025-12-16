@@ -47,7 +47,6 @@
             <Button x:Name="EditProductButton" Content="Edit Product" Click="EditProductButton_Click"/>
             <Button x:Name="OrdersButton" Content="Orders" Click="OrdersButton_Click"/>
             <Button x:Name="EditOrderButton" Content="Edit Order" Click="EditOrderButton_Click"/>
-            <Button x:Name="SelectProductsButton" Content="Select Products" Click="SelectProductsButton_Click"/>
         </StackPanel>
 
         <!-- CONTENT -->
